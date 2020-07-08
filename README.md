@@ -1,5 +1,5 @@
 <hr>
-<p align="center"><img src="https://i.imgur.com/6ON97za.png"/></p>
+<p align="center"><img src="https://i.imgur.com/6ON97za.png" width="733,5" height="141"/></p>
 
 Uses ```https://md5decrypt.net/en/Api/``` to dehash MD5 hashes. If the .txt hash list is > than 400 lines, it uses hashcat.
 
@@ -16,6 +16,6 @@ I upload the "original" file too, but the ```-h``` and ```-e``` modes do not wor
 ``` python3 <desired_file>``` to see usage.
 
 ### Screenshots
-<p align="center"><img src="https://i.imgur.com/glOKTHT.png"/></p>
+<img src="https://i.imgur.com/glOKTHT.png"/>
 
 <hr>
