@@ -1,4 +1,6 @@
-## Python MD5 dehasher
+<hr>
+<p align="center"><img src="https://i.imgur.com/6ON97za.png"/></p>
+
 Uses ```https://md5decrypt.net/en/Api/``` to dehash MD5 hashes. If the .txt hash list is > than 400 lines, it uses hashcat.
 
 ### Description
@@ -14,4 +16,6 @@ I upload the "original" file too, but the ```-h``` and ```-e``` modes do not wor
 ``` python3 <desired_file>``` to see usage.
 
 ### Screenshots
-![alt text](https://i.imgur.com/6ON97za.png)
+<p align="center"><img src="https://i.imgur.com/glOKTHT.png"/></p>
+
+<hr>
