@@ -38,7 +38,7 @@ def input_text(text):
 
 # Check if args are correct
 if len(sys.argv) == 1:
-    print(" %s%s[-] Usagge: %s%s -e <target>" % (Style.BRIGHT, Fore.BLUE, Fore.RESET, sys.argv[0]))
+    print(" %s%s[-] Usagge: %s%s -s <target>" % (Style.BRIGHT, Fore.BLUE, Fore.RESET, sys.argv[0]))
     print("  %s│" % Fore.BLUE)
     print("  %s│  │%s -s  --single %s-%s  Use -s for single hash format." % (Fore.BLUE, Fore.RESET, Fore.BLUE, Fore.RESET))
     print("  %s└──│%s%s COMING SOON..." % (Fore.BLUE, Style.DIM, Fore.RESET))
