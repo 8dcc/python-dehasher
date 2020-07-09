@@ -80,7 +80,7 @@ elif len(sys.argv) > 3:
 def banner():
     os.system("clear")
     print("%s%s ___  ________ _____ " % (Style.BRIGHT, Fore.WHITE))
-    print(" |  \/  |  _  \  ___|        __     __               __   %sby @r4v10l1%s" % (Style.DIM, Style.BRIGHT))
+    print(" |  \/  |  _  \  ___|        __     __               __   %sby @r4v10l1%s%s%s" % (Style.DIM, Style.RESET_ALL, Style.BRIGHT, Fore.WHITE))
     print(" | .  . | | | |___ \    ____/ /__  / /_  ____ ______/ /_  ___  _____")
     print(" | |\/| | | | |   \ \  / __  / _ \/ __ \/ __ `/ ___/ __ \/ _ \/ ___/")
     print(" | |  | | |/ //\__/ / / /_/ /  __/ / / / /_/ (__  ) / / /  __/ /")
