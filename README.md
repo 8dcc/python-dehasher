@@ -1,12 +1,14 @@
 <hr>
 <p align="center"><img src="https://i.imgur.com/6ON97za.png" width="733,5" height="141"/></p>
 
-Uses ```https://md5decrypt.net/en/Api/``` to dehash MD5 hashes. If the .txt hash list is > than 400 lines, it uses hashcat.
+Uses ```https://md5decrypt.net/en/Api/``` to dehash MD5 hashes.
 
 ### Description
-At the moment, only single hash mode is available. Multiple hash version (.txt) coming soon.
+Added multiple hash support on .txt format!
 
-I upload the "original" file too, but the ```-h``` and ```-e``` modes do not work very well.
+If the .txt hash list is > than 400 lines, it uses hashcat.
+
+The API has a limit of 400 total hashes/day.
 
 ### Installation
 ``` git clone https://github.com/r4v10l1/python_dehasher``` 
@@ -17,5 +19,5 @@ I upload the "original" file too, but the ```-h``` and ```-e``` modes do not wor
 
 ### Screenshots
 <img src="https://i.imgur.com/glOKTHT.png"/>
-
+<img src="https://i.imgur.com/fTOSQmX.png" width="754,6" height="426,3"/>
 <hr>
