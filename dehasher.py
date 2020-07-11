@@ -31,6 +31,8 @@ def success_text(text):
     print(" %s%s%s[+] %s%s" % (Style.RESET_ALL, Style.BRIGHT, Fore.GREEN, text, Style.RESET_ALL))
 def error_text(text):
     print(" %s%s%s[!] %s%s" % (Style.RESET_ALL, Style.BRIGHT, Fore.RED, text, Style.RESET_ALL))
+def warning_text(text):
+    print(" %s%s%s[!] %s%s" % (Style.RESET_ALL, Style.BRIGHT, Fore.YELLOW , text, Style.RESET_ALL))
 def input_text(text):
     return input(" %s%s%s[*] %s >>%s " % (Style.RESET_ALL, Style.BRIGHT, Fore.BLUE, text, Fore.RESET))
 #--------------------------------------------------------------------------------------------------
@@ -39,14 +41,18 @@ def input_text(text):
 # Help message
 def help_msg():
     print()
-    print(" %s%s[%s%s—%s] Usagge: %s%s -e <target>" % (Style.BRIGHT, Fore.BLUE, Style.RESET_ALL, Fore.BLUE, Style.BRIGHT, Fore.RESET, sys.argv[0]))
+    print(" %s%s[%s%s—%s] Usagge: %s%s <mode> <target>" % (Style.BRIGHT, Fore.BLUE, Style.RESET_ALL, Fore.BLUE, Style.BRIGHT, Fore.RESET, sys.argv[0]))
     print("  %s│" % Fore.BLUE)
     print("  %s│  │%s -s  --single %s-%s  Use -s for single hash format." % (Fore.BLUE, Fore.RESET, Fore.BLUE, Fore.RESET))
     print("  %s└──│%s -h  --hash   %s-%s  Use -h for only hash list (txt format) (If more than 400 will use hashcat)." % (Fore.BLUE, Fore.RESET, Fore.BLUE, Fore.RESET))
-    print("  %s│  │%s -e  --email  %s-%s  Use -e for email:hash list (txt format)." % (Fore.BLUE, Fore.RESET, Fore.BLUE, Fore.RESET))
+    print("  %s│  │%s -e  --email  %s-%s  Use -e for email:hash list (txt format) (It will convert to hash list and then use -h)." % (Fore.BLUE, Fore.RESET, Fore.BLUE, Fore.RESET))
     print("  %s│" % Fore.BLUE)
     print("  %s│" % Fore.BLUE)
     print("  %s└──│%s <target>     %s-%s  Put here your target (single hash or txt list)%s" % (Fore.BLUE, Fore.RESET, Fore.BLUE, Fore.RESET, Style.RESET_ALL))
+    print()
+    print(" %s%s[%s%s*%s] %sExample: %s%spython3 %s -s 1a79a4d60de6718e8e5b326e338ae533" % (Style.BRIGHT, Fore.BLUE, Style.RESET_ALL, Fore.BLUE, Style.BRIGHT, Fore.WHITE, Style.RESET_ALL, Fore.WHITE, sys.argv[0]))
+    print(" %s%s[%s%s*%s] %sExample: %s%spython3 %s -h hashfile.txt" % (Style.BRIGHT, Fore.BLUE, Style.RESET_ALL, Fore.BLUE, Style.BRIGHT, Fore.WHITE, Style.RESET_ALL, Fore.WHITE, sys.argv[0]))
+    print(" %s%s[%s%s*%s] %sExample: %s%spython3 %s -e emailfile.txt" % (Style.BRIGHT, Fore.BLUE, Style.RESET_ALL, Fore.BLUE, Style.BRIGHT, Fore.WHITE, Style.RESET_ALL, Fore.WHITE, sys.argv[0]))
     print()
     exit(1)
 
@@ -83,7 +89,7 @@ def single_mode_action():
 
 # For -h
 def hash_list_action():
-    print(" %s%s[i] Checking the hashes. %sThis might take a while..." % (Style.RESET_ALL, Fore.BLUE, Fore.RESET))
+    info_text("Checking the hashes. %sThis might take a while...")
     HASH_FILE = str(sys.argv[2])
     os.system("echo "" > results.txt")
     with open(HASH_FILE, "r") as reader:
@@ -109,47 +115,60 @@ def hash_list_action():
                     print()
                     exit(1)
     os.system("echo "" >> results.txt")
-    print(" %s%s[+] All done! Results sent to results.txt [hash:text]%s" % (Style.RESET_ALL, Fore.GREEN, Style.RESET_ALL))
+    success_text("All done! Results sent to results.txt [hash:text]")
+    warning_text("Make sure to move results.txt if you are going to run the script again. It will delete the actual one!")
     print()
     exit(1)
 
 # For -e ### WORKING ON IT
 def email_list_action():
-    print(" %s%s[i] Installing awk if not installed...%s" % (Style.RESET_ALL, Fore.BLUE, Style.RESET_ALL))
-    os.system("apt install awk 2>&1 /dev/null")
+    info_text("Installing awk if not installed...")
+    os.system("apt-get -qq install -y awk 2> /dev/null")
     HASH_FILE = str(sys.argv[2])
-    print(" %s%s[i] Changing email:hash to hash...%s" % (Style.RESET_ALL, Fore.BLUE, Style.RESET_ALL))
-    os.system("awk -F: \'{print $2}\' > only_hahes.txt")
+    info_text("Changing email:hash to hash...")
+    os.system("awk -F: \'{print $2}\' %s > only_hahes.txt" % HASH_FILE)
     HASH_FILE = "only_hahes.txt"
-    os.system("touch results.txt")
-    print(" %s%s[i] Checking the hashes. %sThis might take a while..." % (Style.RESET_ALL, Fore.BLUE, Fore.RESET))
-    f = open(HASH_FILE, "r")
-    for HASH in f:
-        # print(HASH.strip())
-        HASH = HASH.strip()
-        URL = "https://md5decrypt.net/en/Api/api.php?hash=%s&hash_type=%s&email=%s&code=%s" % (HASH, "md5", USER_EMAIL, API_CODE)
-        PAGE = requests.get(URL, headers=HEADERS)  # Uses requests lib to get the content of the page
-        PAGE_CONTENT = BeautifulSoup(PAGE.content, "html.parser").get_text()
-        if "ERROR CODE : 002" in PAGE_CONTENT:
-            print()
-            os.system("rm results.txt")
-            print(" %s%s[!] Error. Wrong email / code.%s" % (Style.RESET_ALL, Fore.REED, Style.RESET_ALL))
-            print()
-            exit(1)
-        if PAGE_CONTENT.strip() == "" and "error" not in PAGE_CONTENT.lower():
-            f_w = open("results.txt", "a")
-            f_w.write(HASH + ":" + PAGE_CONTENT + "\n")
-    print(" %s%s[+] All done! Results sent to results.txt [hash:text]%s" % (Style.RESET_ALL, Fore.GREEN, Style.RESET_ALL))
+    os.system("echo "" > results.txt")
+    info_text("Checking the hashes. This might take a while...")
+    with open(HASH_FILE, "r") as reader:
+        while True:
+            line = reader.readline()
+            if not line:
+                break
+            HASHED = line.strip()
+            URL = "https://md5decrypt.net/en/Api/api.php?hash=%s&hash_type=md5&email=%s&code=%s" % (HASHED, USER_EMAIL, API_CODE)
+            try:
+                PAGE = requests.get(URL, headers=HEADERS)  # Uses requests lib to get the content of the page
+                PAGE_CONTENT = BeautifulSoup(PAGE.content, "html.parser").get_text()
+            except Exception as e:
+                error_text("Exception happened while connecting to md5decrypt: ") + e
+            if PAGE_CONTENT.strip() != "":
+                if "error" not in PAGE_CONTENT.lower():
+                    with open("results.txt", "a") as add_text: # this is better
+                        add_text.write("{}:{}".format(HASHED, PAGE_CONTENT))
+                elif "ERROR CODE : 002" in PAGE_CONTENT:
+                    os.system("rm results.txt")
+                    print()
+                    print(" %s%s[!] Error. Wrong email / code.%s" % (Style.RESET_ALL, Fore.RED, Style.RESET_ALL))
+                    print()
+                    exit(1)
+    os.system("echo "" >> results.txt")
+    success_text("All done! Results sent to results.txt [hash:text]")
+    warning_text("Make sure to move results.txt if you are going to run the script again. It will delete the actual one!")
+    print()
     exit(1)
 #--------------------------------------------------------------------------------------------------
 # Parse the arguments
 if len(sys.argv) == 1:
     help_msg()
 elif len(sys.argv) == 2:
-    print()
-    error_text("Error. Not enough arguments.")
-    print()
-    exit(1)
+    if "-h" in sys.argv[1]:
+        help_msg()
+    else:
+        print()
+        error_text("Error. Not enough arguments.")
+        print()
+        exit(1)
 elif len(sys.argv) == 3:
     if "-s" in str(sys.argv[1]).strip() and ".txt" in str(sys.argv[2]):
         print()
@@ -187,7 +206,7 @@ try:
     banner()
 except KeyboardInterrupt:
     print()
-    print(" %s%s[!] Detected Ctrl+C. Shutting down...%s" % (Style.RESET_ALL, Fore.BLUE, Style.RESET_ALL))
+    error_text("Detected Ctrl+C. Shutting down...")
     exit(1)
 #--------------------------------------------------------------------------------------------------
 # Loading (not necessary tho)
@@ -204,53 +223,53 @@ try:
     sys.stdout.write('\r')
 except KeyboardInterrupt:
     print()
-    print(" %s%s[!] Detected Ctrl+C. Shutting down...%s" % (Style.RESET_ALL, Fore.BLUE, Style.RESET_ALL))
+    error_text("Detected Ctrl+C. Shutting down...")
     exit(1)
 #--------------------------------------------------------------------------------------------------
 # Hashcat
 def more_than_400():
     try:
         WORDLIST = input(" %s%s[*] Wordlist path >> %s" % (Style.BRIGHT, Fore.BLUE, Fore.RESET))
-        print(" %s%s[i] Running hashcat, this may take a while... %s" % (Style.RESET_ALL, Fore.BLUE, Fore.RESET))
+        info_text("Running hashcat, this may take a while...")
         HASH = str(sys.argv[2])
         os.system("hashcat -m 0 -a 0 %s %s 2>&1 /dev/null" % (HASH, WORDLIST))
         os.system("hashcat -m 0 -a 0 %s %s --show > results.txt" % (HASH, WORDLIST))
-        print(" %s%s[i] All done, results are in \"results.txt\"  %s" % (Style.RESET_ALL, Fore.BLUE, Fore.RESET))
+        info_text("All done, results are in \"results.txt\"")
         print()
         exit(1)
     except KeyboardInterrupt:
         print()
-        print(" %s%s[!] Detected Ctrl+C. Shutting down...%s" % (Style.RESET_ALL, Fore.BLUE, Style.RESET_ALL))
+        error_text("Detected Ctrl+C. Shutting down...")
         exit(1)
 
 if sys.argv[1] != "-s":
     COUNT_LINES = sum(1 for line in open(str(sys.argv[2])))
     if COUNT_LINES > 400:
         if sys.argv[1] == "-h":
-            print(" %s%s[i] The hash list is too long. Using hashcat. %s" % (Style.RESET_ALL, Fore.BLUE, Fore.RESET))
+            info_text("The hash list is too long. Using hashcat.")
             more_than_400()
             exit(1)
         elif sys.argv[1] == "-e":
             print()
-            print(" %s%s[!] Error. More than 400 lines/day are not suported in email mode.%s" % (Style.RESET_ALL, Fore.BLUE, Style.RESET_ALL))
+            error_text("Error. More than 400 lines/day are not suported in email mode.")
             print()
             exit(1)
 #--------------------------------------------------------------------------------------------------
 # Email code
 try:
-    USER_EMAIL = input(" %s%s[*] Your email >> %s" % (Style.BRIGHT, Fore.BLUE, Fore.RESET))
+    USER_EMAIL = input_text("Your email")
     data = {'email_api':USER_EMAIL}
     try:
         r = requests.post("https://md5decrypt.net/en/Api/", data=data)
     except Exception:
-        print(" %s%s[!] Error. Request failed.%s" % (Style.BRIGHT, Fore.RED, Fore.RESET))
+        error_text("Error. Request failed.")
         print()
         exit(1)
     input(" %s%s[i] A verification code has been sent for the use of the API. %sPress Enter to continue..." % (Style.RESET_ALL, Fore.BLUE, Fore.RESET))
     API_CODE = input(" %s%s[*] Your code >> %s" % (Style.BRIGHT, Fore.BLUE, Fore.RESET))
 except KeyboardInterrupt:
     print()
-    print(" %s%s[!] Detected Ctrl+C. Shutting down...%s" % (Style.RESET_ALL, Fore.BLUE, Style.RESET_ALL))
+    error_text("Detected Ctrl+C. Shutting down...")
     exit(1)
 #--------------------------------------------------------------------------------------------------
 HEADERS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36 OPR/68.0.3618.173"}  # You can replace here your user agent.
