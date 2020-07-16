@@ -19,11 +19,14 @@ The API has a limit of 400 total hashes/day.
 
 ``` cd python_dehasher``` 
 
-``` python3 <desired_file>``` to see usage.
+``` python3 dehasher.py -h``` to see usage.
 
 ### Screenshots
 <img src="https://i.imgur.com/glOKTHT.png"/>
 <img src="https://i.imgur.com/fTOSQmX.png" width="754,6" height="426,3"/>
 <img src="https://i.imgur.com/1aHrndo.png"/>
+<img src="https://i.imgur.com/PlEjo60.png"/>
+<img src="https://i.imgur.com/AJoXh5M.png"/>
+<img src="https://i.imgur.com/HK0IlTB.png"/>
 
 <hr>
