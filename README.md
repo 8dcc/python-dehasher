@@ -1,5 +1,5 @@
 <hr>
-<p align="center"><img src="https://i.imgur.com/6ON97za.png" width="733,5" height="141"/></p>
+<p align="center"><img src="https://i.imgur.com/9V0QK1W.png" width="733,5" height="141"/></p>
 
 Uses ```https://md5decrypt.net/en/Api/``` to dehash MD5 hashes.
 
