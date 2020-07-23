@@ -177,8 +177,39 @@ def check_more_than_400():
 #--------------------------------------------------------------------------------------------------
 # API modes
 
+### NOT USEFUL ###
 # Email code
-def email_code():
+# USER_EMAIL = ""
+# API_CODE = ""
+# def email_code():
+#     HEADERS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36 OPR/68.0.3618.173"}  # You can replace here your user agent.
+#     try:
+#         USER_EMAIL = input_text("Your email")
+#         data = {'email_api':USER_EMAIL}
+#         try:
+#             r = requests.post("https://md5decrypt.net/en/Api/", data=data)
+#         except Exception:
+#             error_text("Error. Request failed.")
+#             print()
+#             exit(1)
+#         input(" %s%s[i] A verification code has been sent for the use of the API. %sPress Enter to continue..." % (Style.RESET_ALL, Fore.BLUE, Fore.RESET))
+#         API_CODE = input(" %s%s[*] Your code >> %s" % (Style.BRIGHT, Fore.BLUE, Fore.RESET))
+#     except KeyboardInterrupt:
+#         print()
+#         error_text("Detected Ctrl+C. Shutting down...")
+#         exit(1)
+#################
+
+# For -s
+def single_mode_action():
+    try:
+        banner()
+        loading_4()
+        check_more_than_400()
+    except KeyboardInterrupt:
+        print()
+        error_text("Detected Ctrl+C. Shutting down...")
+        exit(1)
     HEADERS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36 OPR/68.0.3618.173"}  # You can replace here your user agent.
     try:
         USER_EMAIL = input_text("Your email")
@@ -195,18 +226,6 @@ def email_code():
         print()
         error_text("Detected Ctrl+C. Shutting down...")
         exit(1)
-
-# For -s
-def single_mode_action():
-    try:
-        banner()
-        loading_4()
-        check_more_than_400()
-    except KeyboardInterrupt:
-        print()
-        error_text("Detected Ctrl+C. Shutting down...")
-        exit(1)
-    email_code()
     HASH = sys.argv[2]
     URL = "https://md5decrypt.net/en/Api/api.php?hash=%s&hash_type=%s&email=%s&code=%s" % (HASH, "md5", USER_EMAIL, API_CODE)
     PAGE = requests.get(URL, headers=HEADERS)  # Uses requests lib to get the content of the page
@@ -246,7 +265,22 @@ def hash_list_action():
         print()
         error_text("Detected Ctrl+C. Shutting down...")
         exit(1)
-    email_code()
+    HEADERS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36 OPR/68.0.3618.173"}  # You can replace here your user agent.
+    try:
+        USER_EMAIL = input_text("Your email")
+        data = {'email_api':USER_EMAIL}
+        try:
+            r = requests.post("https://md5decrypt.net/en/Api/", data=data)
+        except Exception:
+            error_text("Error. Request failed.")
+            print()
+            exit(1)
+        input(" %s%s[i] A verification code has been sent for the use of the API. %sPress Enter to continue..." % (Style.RESET_ALL, Fore.BLUE, Fore.RESET))
+        API_CODE = input(" %s%s[*] Your code >> %s" % (Style.BRIGHT, Fore.BLUE, Fore.RESET))
+    except KeyboardInterrupt:
+        print()
+        error_text("Detected Ctrl+C. Shutting down...")
+        exit(1)
     info_text("Checking the hashes. This might take a while...")
     HASH_FILE = str(sys.argv[2])
     os.system("echo "" > results.txt")
@@ -287,7 +321,22 @@ def email_list_action():
         print()
         error_text("Detected Ctrl+C. Shutting down...")
         exit(1)
-    email_code()
+    HEADERS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36 OPR/68.0.3618.173"}  # You can replace here your user agent.
+    try:
+        USER_EMAIL = input_text("Your email")
+        data = {'email_api':USER_EMAIL}
+        try:
+            r = requests.post("https://md5decrypt.net/en/Api/", data=data)
+        except Exception:
+            error_text("Error. Request failed.")
+            print()
+            exit(1)
+        input(" %s%s[i] A verification code has been sent for the use of the API. %sPress Enter to continue..." % (Style.RESET_ALL, Fore.BLUE, Fore.RESET))
+        API_CODE = input(" %s%s[*] Your code >> %s" % (Style.BRIGHT, Fore.BLUE, Fore.RESET))
+    except KeyboardInterrupt:
+        print()
+        error_text("Detected Ctrl+C. Shutting down...")
+        exit(1)
     info_text("Installing awk if not installed...")
     os.system("apt-get -qq install -y awk 2> /dev/null")
     HASH_FILE = str(sys.argv[2])
@@ -336,20 +385,21 @@ elif len(sys.argv) == 2:
         print()
         exit(1)
 elif len(sys.argv) == 3:
-    if "-s" in str(sys.argv[1]).strip() and ".txt" in str(sys.argv[2]):
-        print()
-        error_text("Error. Type -d to use a hash list.")
-        print()
-        exit(1)
-    elif "-d" in str(sys.argv[1]).strip():
-        if ".txt" not in str(sys.argv[2]):
+    if "-s" in str(sys.argv[1]).strip():
+        if ".txt" in str(sys.argv[2]):
             print()
-            error_text("Error. Type -s to check a single hash.")
+            error_text("Error. Type -d to use a hash list.")
             print()
             exit(1)
         elif len(str(sys.argv[2])) != 32:
             print()
-            error_text("Error. Invalid hash type (only md5) or invalid file.")
+            error_text("Error. Invalid hash type (only md5).")
+            print()
+            exit(1)
+    elif "-d" in str(sys.argv[1]).strip():
+        if ".txt" not in str(sys.argv[2]):
+            print()
+            error_text("Error. Type -s to check a single hash.")
             print()
             exit(1)
     elif "-e" in str(sys.argv[1]).strip() and ".txt" not in str(sys.argv[2]):
