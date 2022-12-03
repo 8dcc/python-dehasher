@@ -11,7 +11,7 @@
 ### Installation
 ```bash
 git clone https://github.com/r4v10l1/python-dehasher
-cd python_dehasher
+cd python-dehasher
 python3 dehasher.py -h  # View the help
 ```
 
